@@ -59,7 +59,9 @@ app.use((req, res, next) => {
   const port = parseInt(process.env.PORT || "3000", 10);
   // Ensure backend never uses port 5000 (reserved for frontend)
   const actualPort = port === 5000 ? 3000 : port;
-  server.listen(actualPort, "127.0.0.1", () =>
+
+  server.listen(actualPort, "0.0.0.0", () =>  // ✅ Works on Render
+ 
     log(`🚀 Server running on http://127.0.0.1:${actualPort} (env:${process.env.NODE_ENV})`)
   );
 })();
