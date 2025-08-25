@@ -13,19 +13,26 @@ import {
   insertApplicationSchema,
   insertContactSchema,
   insertCompanySchema,
-  loginSchema
+  loginSchema,
+  type InsertUser,
+  type InsertJob,
+  type InsertCourse,
+  type InsertApplication,
+  type InsertContact,
+  type InsertCompany,
+  type LoginData
 } from "../../shared/schema.js";
 
 export const storage = {
   // ✅ Users
   async createUser(data: unknown) {
-    const parsed = insertUserSchema.parse(data);
+    const parsed: InsertUser = insertUserSchema.parse(data);
     const [user] = await db.insert(users).values(parsed).returning();
     return user;
   },
 
   async login(data: unknown) {
-    const parsed = loginSchema.parse(data);
+    const parsed: LoginData = loginSchema.parse(data);
     const [user] = await db.select()
       .from(users)
       .where(and(
@@ -39,10 +46,41 @@ export const storage = {
 
   // ✅ Jobs
   async getJobs() {
-    return db.select().from(jobs);
+    return db.select({
+      id: jobs.id,
+      companyId: jobs.companyId,
+      title: jobs.title,
+      description: jobs.description,
+      requirements: jobs.requirements,
+      qualifications: jobs.qualifications,
+      skills: jobs.skills,
+      experienceLevel: jobs.experienceLevel,
+      experienceMin: jobs.experienceMin,
+      experienceMax: jobs.experienceMax,
+      location: jobs.location,
+      jobType: jobs.jobType,
+      salary: jobs.salary,
+      applyUrl: jobs.applyUrl,
+      closingDate: jobs.closingDate,
+      batchEligible: jobs.batchEligible,
+      isActive: jobs.isActive,
+      createdAt: jobs.createdAt,
+      company: {
+        id: companies.id,
+        name: companies.name,
+        description: companies.description,
+        website: companies.website,
+        linkedinUrl: companies.linkedinUrl,
+        logo: companies.logo,
+        location: companies.location,
+        createdAt: companies.createdAt,
+      }
+    })
+    .from(jobs)
+    .leftJoin(companies, eq(jobs.companyId, companies.id));
   },
   async createJob(data: unknown) {
-    const parsed = insertJobSchema.parse(data);
+    const parsed: InsertJob = insertJobSchema.parse(data);
     const [job] = await db.insert(jobs).values(parsed).returning();
     return job;
   },
@@ -52,7 +90,7 @@ export const storage = {
     return db.select().from(courses);
   },
   async createCourse(data: unknown) {
-    const parsed = insertCourseSchema.parse(data);
+    const parsed: InsertCourse = insertCourseSchema.parse(data);
     const [course] = await db.insert(courses).values(parsed).returning();
     return course;
   },
@@ -62,7 +100,7 @@ export const storage = {
     return db.select().from(applications);
   },
   async createApplication(data: unknown) {
-    const parsed = insertApplicationSchema.parse(data);
+    const parsed: InsertApplication = insertApplicationSchema.parse(data);
     const [application] = await db.insert(applications).values(parsed).returning();
     return application;
   },
@@ -72,7 +110,7 @@ export const storage = {
     return db.select().from(contacts);
   },
   async createContact(data: unknown) {
-    const parsed = insertContactSchema.parse(data);
+    const parsed: InsertContact = insertContactSchema.parse(data);
     const [contact] = await db.insert(contacts).values(parsed).returning();
     return contact;
   },
@@ -82,7 +120,7 @@ export const storage = {
     return db.select().from(companies);
   },
   async createCompany(data: unknown) {
-    const parsed = insertCompanySchema.parse(data);
+    const parsed: InsertCompany = insertCompanySchema.parse(data);
     const [company] = await db.insert(companies).values(parsed).returning();
     return company;
   },
