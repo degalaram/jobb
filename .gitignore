@@ -1,0 +1,31 @@
+# Node.js dependencies
+node_modules
+
+# Build outputs
+dist
+build
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tar.gz
+
+# Server specific (only ignore if you don’t serve static files from here)
+# server/public
+
+# Vite config backups (don’t ignore main config)
+vite.config.ts.*
+!vite.config.ts

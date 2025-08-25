@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: job-portal
+    env: node
+    buildCommand: chmod +x build-final.sh && ./build-final.sh
+    startCommand: node deploy-final.js
+    plan: free
+    region: oregon
+    env: 
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        generateValue: true
+    disk:
+      name: job-portal-disk
+      mountPath: /var/data
+      sizeGB: 1
