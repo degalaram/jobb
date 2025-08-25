@@ -6,16 +6,19 @@
   "license": "MIT",
   "engines": {
     "node": "20.x"
+    
   },
   "scripts": {
-    "build": "npm run build:server && npm run build:client",
+
+    "build": "npm install && cd client && npm install && npm run build && cd ../server && npm install && npm run build",
+    "start": "cd server && npm start",
+    "postinstall": "echo 'Installation complete'
     "build:server": "cd server && npm run build",
     "build:client": "cd client && npm run build",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
-    "start": "node server/dist/index.js",
-    "postinstall": "npm run build"
+   
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -91,3 +94,5 @@
     "vite": "^5.4.19"
   }
 }
+
+    
