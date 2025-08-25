@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ✅ Request logging middleware for /api only
+// Request logging middleware for /api only
 app.use((req, res, next) => {
   const start = Date.now();
   const p = req.path;
@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  // ✅ Global error handler
+  // Global error handler
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err?.status || err?.statusCode || 500;
     log(`❌ Error: ${err?.message || "Internal Server Error"}`);
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {
-    // ✅ Production: serve built client
+    // Production: serve built client
     const clientDist = path.join(process.cwd(), "dist", "client");
     app.use(express.static(clientDist));
     app.get("*", (req, res) => {
@@ -57,11 +57,8 @@ app.use((req, res, next) => {
   }
 
   const port = parseInt(process.env.PORT || "3000", 10);
-  // Ensure backend never uses port 5000 (reserved for frontend)
-  const actualPort = port === 5000 ? 3000 : port;
-
-  server.listen(actualPort, "0.0.0.0", () =>  // ✅ Works on Render
- 
-    log(`🚀 Server running on http://127.0.0.1:${actualPort} (env:${process.env.NODE_ENV})`)
+  // CRITICAL FIX: Bind to 0.0.0.0 for Render compatibility
+  server.listen(port, "0.0.0.0", () =>
+    log(`🚀 Server running on port ${port} (env:${process.env.NODE_ENV})`)
   );
 })();
